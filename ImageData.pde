@@ -8,6 +8,8 @@ Boolean save = false;
 Boolean tableStart = false;
 Boolean imgLoaded = false;
 Boolean dataLoaded = false;
+Boolean firstTime = true;
+Boolean firstTimeOut = true;
 
 String[] fields = {"type", "label", "link", "cast", "name"};
 String temp = "";
@@ -35,7 +37,7 @@ int total = 0;
 
 
 void setup() {
-  size(1500, 1300);
+  size(800, 800);
   frame.setResizable(true);
   selectInput("Select a file to process:", "fileSelected");
 
@@ -45,6 +47,12 @@ void setup() {
 
 void draw() {
   background(160);
+  textAlign(CORNER);
+  text("focused = " + str(focused),10,10,width,50);
+  text("firstTime = " + str(firstTime),10,40,width,50);
+  text("firstTimeOut = " + str(firstTimeOut),10,70,width,50);
+  
+  
   if (imgLoaded) {
     image(img, 0, 0);
   }
@@ -93,7 +101,7 @@ void drawRect() {
     }
     noFill();
     rect(rx, ry, rw, rh);
-    if (i==count-1) {
+    if (i==count-1 && !firstTime) {
       fill(255, 0, 0);
       text(temp, rx+10, ry-10, rw, rh);
     } 
@@ -143,17 +151,25 @@ void drawVoice() {
 /* ******************************************** */
 
 void mousePressed() {
-  if (count > 0) {
-    updateData();
+  if (!focused){
+    if (count > 0) {
+      firstTime = false;
+      firstTimeOut = true;
+      updateData();
+    }
+    count = table.getRowCount()+1;
+    createRow();
+    updateSize();
+    println("count = " + str(count) + " rowCount = " + str(table.getRowCount()));
   }
-  count = table.getRowCount()+1;
-  createRow();
-  updateSize();
-  println("count = " + str(count) + " rowCount = " + str(table.getRowCount()));
 }
 
 void mouseDragged() {
-  updateSize();
+  if(firstTimeOut){
+    updateSize();
+  } else {
+     firstTimeOut = false; 
+  }
 }
 
 void mouseMoved() {
@@ -188,6 +204,7 @@ int yOffset = 0;
 int spacer = 50;
 
 void keyCapture() {
+  firstTime = false;
   if (keyCode == BACKSPACE) {
     if (temp.length() > 0) {
       temp = temp.substring(0, temp.length()-1);
@@ -238,11 +255,11 @@ void createTable() {
 
 
   File file = new File(filePath + fileName + ".csv");
-
+  println("-- " + count + "-------");
   if(file.exists()){
     println("------------------------- Loading Table ------------------");
     table = loadTable(filePath + fileName + ".csv", "header");
-    count = table.getRowCount()-1;
+    count = table.getRowCount();   
   } else {
     println("------------------------- Creating Table ------------------");
     table = new Table();  
@@ -257,7 +274,7 @@ void createTable() {
     table.addColumn("w");
     table.addColumn("h");
   }
-  
+  println("------- " + count + "-------");
 }
 
 void createRow() {
@@ -307,7 +324,8 @@ void saveAll() {
   saveTable(table, filePath + fileName + ".csv");
   println("Table Saved");
 }
-
+ 
+  
 /* ******************************************** */
 /*    styles
 /* ******************************************** */
