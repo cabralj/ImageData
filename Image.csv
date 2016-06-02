@@ -10,4 +10,5 @@ source,type,label,link,cast,name,x,y,w,h
 /Users/cabral/Desktop/Underworld/ImageData/Image.png,9,,,,,386,541,127,122
 /Users/cabral/Desktop/Underworld/ImageData/Image.png,10,,,,,667,657,127,138
 /Users/cabral/Desktop/Underworld/ImageData/Image.png,11,,,,,85,599,112,109
-/Users/cabral/Desktop/Underworld/ImageData/Image.png,Animal,Kingdom,well,Hello,,231,677,142,113
+/Users/cabral/Desktop/Underworld/ImageData/Image.png,,Kingdom,well,Hello,,231,677,142,113
+/Users/cabral/Desktop/Underworld/ImageData/Image.png,13,label,link,cast,name,250,57,426,435

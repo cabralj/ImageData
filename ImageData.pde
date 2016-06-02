@@ -47,11 +47,8 @@ void setup() {
 
 void draw() {
   background(160);
-  textAlign(CORNER);
-  text("focused = " + str(focused),10,10,width,50);
-  text("firstTime = " + str(firstTime),10,40,width,50);
-  text("firstTimeOut = " + str(firstTimeOut),10,70,width,50);
   
+  drawDebug();
   
   if (imgLoaded) {
     image(img, 0, 0);
@@ -71,7 +68,12 @@ void draw() {
 /*    Draw
 /* ******************************************** */
 
-
+void drawDebug(){
+  textAlign(CORNER);
+  text("focused = " + str(focused),10,10,width,50);
+  text("firstTime = " + str(firstTime),10,40,width,50);
+  text("firstTimeOut = " + str(firstTimeOut),10,70,width,50); 
+}
 void drawSave() {
   if (save) {
     strokeWeight(5);
@@ -85,7 +87,7 @@ void drawRect() {
   strokeWeight(2.5);
 
   for (int i=0;i<table.getRowCount();i++) {
-
+   println(i);
     TableRow r = table.getRow(i);
     String rsource = r.getString("source");
     int rx = r.getInt("x");
@@ -99,9 +101,11 @@ void drawRect() {
     else {
       stroke(0, 0, 255);
     }
+    
     noFill();
     rect(rx, ry, rw, rh);
-    if (i==count-1 && !firstTime) {
+    
+    if (i==count-1) {
       fill(255, 0, 0);
       text(temp, rx+10, ry-10, rw, rh);
     } 
@@ -151,25 +155,34 @@ void drawVoice() {
 /* ******************************************** */
 
 void mousePressed() {
-  if (!focused){
+  println("focused = " + focused);
+  //if (!focused){
+    
+    println("focused != " + focused);
+    
     if (count > 0) {
       firstTime = false;
-      firstTimeOut = true;
       updateData();
     }
+
+
     count = table.getRowCount()+1;
     createRow();
     updateSize();
+
     println("count = " + str(count) + " rowCount = " + str(table.getRowCount()));
-  }
+
+ //} else {
+
+   firstTime = true;
+
+ //}
 }
 
 void mouseDragged() {
-  if(firstTimeOut){
+ // if(!firstTime){
     updateSize();
-  } else {
-     firstTimeOut = false; 
-  }
+ // }
 }
 
 void mouseMoved() {
@@ -177,8 +190,14 @@ void mouseMoved() {
 }
 
 void mouseReleased() {
-  updateSize();
-  updateData();
+  println("mouseReleases");
+  //if (!firstTime){
+    updateSize();
+    updateData();
+  //} else {
+    println("firstTime = false");
+    firstTime = false;
+  //}
 }
 
 
@@ -345,6 +364,7 @@ void fileSelected(File selection) {
   } 
   else {
     img = loadImage(selection.getAbsolutePath());
+
     imgLoaded = true;
     source = selection.getAbsolutePath();
     
@@ -358,13 +378,15 @@ void fileSelected(File selection) {
     filePath = join(shorten(s),"/") + "/";
     fileName = join(shorten(e),".");
     
+    
+    
     println(source);
     println(sourceData);
     println(filePath);
     println(fileName);
     
     createTable();
-
+    size(img.width,img.height);
   }
 }
 
