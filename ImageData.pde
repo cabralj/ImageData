@@ -48,7 +48,7 @@ void setup() {
 void draw() {
   background(160);
   
-  drawDebug();
+  //drawDebug();
   
   if (imgLoaded) {
     image(img, 0, 0);
